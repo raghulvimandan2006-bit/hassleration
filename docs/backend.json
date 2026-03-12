@@ -1,0 +1,71 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a registered household in the Hassle-Free Ration system.",
+      "properties": {
+        "id": { "type": "string", "description": "Unique 10-digit Household ID" },
+        "rationCard": { "type": "string" },
+        "phone": { "type": "string" },
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "zone": { "type": "string" },
+        "registeredAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "rationCard", "phone", "name", "address", "zone", "registeredAt"]
+    },
+    "Token": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Token",
+      "type": "object",
+      "description": "Individual token issued for ration pickup.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "issueDate": { "type": "string", "format": "date" },
+        "tokenNumber": { "type": "number" },
+        "status": { "type": "string" },
+        "issuedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "StockItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "StockItem",
+      "type": "object",
+      "description": "Live warehouse stock level tracker.",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "quantity": { "type": "number" },
+        "unit": { "type": "string" },
+        "lastUpdated": { "type": "string", "format": "date-time" }
+      }
+    },
+    "SystemLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SystemLog",
+      "type": "object",
+      "description": "Real-time automation activity tracking.",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "level": { "type": "string", "enum": ["info", "error", "success"] },
+        "message": { "type": "string" },
+        "details": { "type": "string" },
+        "caller": { "type": "string" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password", "anonymous"]
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/backend/entities/User" }, "description": "Household registry" },
+    "/users/{userId}/tokens/{tokenId}": { "schema": { "$ref": "#/backend/entities/Token" }, "description": "Issued tokens history" },
+    "/stock_items/{stockItemId}": { "schema": { "$ref": "#/backend/entities/StockItem" }, "description": "Live warehouse inventory" },
+    "/system_logs/{logId}": { "schema": { "$ref": "#/backend/entities/SystemLog" }, "description": "6-step automation tracking" },
+    "/daily_token_counts/{date}": { "description": "Daily sequential token counters" }
+  }
+}
